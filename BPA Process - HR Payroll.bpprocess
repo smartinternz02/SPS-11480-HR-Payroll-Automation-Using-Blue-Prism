@@ -1,0 +1,173 @@
+﻿<process name="HR Payroll" version="1.0" bpversion="7.0.0.40580" narrative="" byrefcollection="true" preferredid="c87cbfa4-32d8-4c74-9b7e-8aa9a40e519f">
+  <view>
+    <camerax>-38</camerax>
+    <cameray>42</cameray>
+    <zoom version="2">1.125</zoom>
+  </view>
+  <preconditions />
+  <endpoint narrative="" />
+  <stage stageid="cd2c7caf-d4dc-4388-a84f-e2bbab91fee1" name="Start" type="Start">
+    <display x="15" y="-180" />
+    <onsuccess>f1ef3f5f-7164-4ba8-8257-0d8c51c769d2</onsuccess>
+  </stage>
+  <stage stageid="97a20dd0-1901-493c-8b28-8b43b0e9e46a" name="End" type="End">
+    <display x="15" y="270" />
+  </stage>
+  <stage stageid="8de924f9-1c97-4c07-a9f4-587d0c1467c4" name="Stage1" type="ProcessInfo">
+    <display x="-195" y="-105" w="150" h="90" />
+  </stage>
+  <stage stageid="f1ef3f5f-7164-4ba8-8257-0d8c51c769d2" name="Create Instance" type="Action">
+    <loginhibit onsuccess="true" />
+    <display x="15" y="-135" />
+    <inputs>
+      <input type="flag" name="Enable Events" friendlyname="Enable Events" narrative="Flag to indicate that events should be enabled / disabled on the attached instance - defaulted to True" expr="" />
+    </inputs>
+    <outputs>
+      <output type="number" name="handle" friendlyname="handle" narrative="An integer which can be used to identify the created instance in subsequent actions" stage="handle" />
+    </outputs>
+    <onsuccess>560468d2-7bc7-4053-b1b9-d6696abb0818</onsuccess>
+    <resource object="MS Excel VBO" action="Create Instance" />
+  </stage>
+  <stage stageid="72b84e1e-80dd-433c-a0da-2e67a625564c" name="handle" type="Data">
+    <display x="-240" y="-15" />
+    <datatype>number</datatype>
+    <initialvalue />
+    <private />
+    <alwaysinit />
+  </stage>
+  <stage stageid="560468d2-7bc7-4053-b1b9-d6696abb0818" name="Open Excel file" type="Action">
+    <loginhibit onsuccess="true" />
+    <display x="15" y="-90" />
+    <inputs>
+      <input type="number" name="handle" friendlyname="handle" narrative="The integer handle identifying the instance on which the required workbook should be opened. The default of zero indicates the currently active instance." expr="[handle]" />
+      <input type="text" name="File name" friendlyname="File name" narrative="The path and name of the file which should be opened." expr="&quot;C:\Users\shaik irfan\Desktop\hrpayroll.xlsx&quot;" />
+    </inputs>
+    <outputs>
+      <output type="text" name="Workbook Name" friendlyname="Workbook Name" narrative="The name used by Excel to identify the workbook - usually this is the file name (without the path)." stage="Workbook Name" />
+    </outputs>
+    <onsuccess>eb573492-df3f-40a5-b24f-d74df303df1b</onsuccess>
+    <resource object="MS Excel VBO" action="Open Workbook" />
+  </stage>
+  <stage stageid="eb573492-df3f-40a5-b24f-d74df303df1b" name="Get to collection" type="Action">
+    <loginhibit onsuccess="true" />
+    <display x="15" y="-45" />
+    <inputs>
+      <input type="number" name="handle" friendlyname="handle" narrative="The integer handle identifying the instance on which the worksheet which should be retrieved resides. The default of zero indicates the currently active instance." expr="[handle]" />
+      <input type="text" name="Workbook Name" friendlyname="Workbook Name" narrative="The name of the workbook which contains the sheet required. The default empty text indicates the currently active workbook on the specified instance." expr="[Workbook Name]" />
+      <input type="text" name="Worksheet Name" friendlyname="Worksheet Name" narrative="The name of the worksheet within the specified workbook which should be written to a collection. The default empty text indicates the currently active worksheet within the specified workbook." expr="&quot;Sheet1&quot;" />
+      <input type="text" name="Fetch Data With Method" friendlyname="Fetch Data With Method" narrative="The method used to fetch data from cells in the worksheet. Options include Text, Value, and Value2. The default indicates Value will be used." expr="" />
+    </inputs>
+    <outputs>
+      <output type="collection" name="Data" friendlyname="Data" narrative="The collection containing the data from the specified worksheet - the column IDs will be gleaned from the first row on the sheet being retrieved." stage="Employee" />
+    </outputs>
+    <onsuccess>def50c8e-0a9d-47b9-96f5-83ef4fc09211</onsuccess>
+    <resource object="MS Excel VBO" action="Get Worksheet As Collection" />
+  </stage>
+  <stage stageid="f6d063ec-613c-49d9-8f32-763dbe7c6490" name="Workbook Name" type="Data">
+    <display x="-150" y="-15" />
+    <datatype>text</datatype>
+    <initialvalue />
+    <private />
+    <alwaysinit />
+  </stage>
+  <stage stageid="5bb96e3b-61e4-41ca-b8e3-e9bd764f5056" name="Data" type="Collection">
+    <display x="-240" y="30" />
+    <datatype>collection</datatype>
+    <private />
+    <alwaysinit />
+  </stage>
+  <stage stageid="d4fcbd65-74de-42c5-956c-553cdeb68d5e" name="Employee" type="Collection">
+    <display x="-150" y="30" />
+    <datatype>collection</datatype>
+    <private />
+    <alwaysinit />
+    <collectioninfo>
+      <field name="EMP ID" type="number" description="Employee ID" />
+      <field name="EMP NAME" type="text" description="Name of employee" />
+      <field name="SAL RATE BASIC" type="number" description="Basic salary rate" />
+      <field name="SAL RATE DA" type="number" description="Salary for DA" />
+      <field name="SAL RATE HRA" type="number" description="Salary for HRA" />
+      <field name="TOTAL SALARY" type="number" description="Total salary rate for employee" />
+      <field name="ATTEND P" type="number" description="Attendance for pay employee" />
+      <field name="ATTEND PL" type="number" description="Attend pay leave" />
+      <field name="ATTEND WO" type="number" description="Attend weekly off" />
+      <field name="ATTEND PD" type="number" description="Attend pay days" />
+      <field name="GROSS BASIC" type="number" description="Gross earnedbasic salary" />
+      <field name="GROSS DA" type="number" description="Gross earned DA" />
+      <field name="GROSS HRA" type="number" description="Gross earned HRA" />
+      <field name="INCENTIVE" type="number" description="Incentive offer to employee" />
+      <field name="ESI AMOUNT" type="number" description="Deduction of ESI" />
+      <field name="PF AMOUNT" type="number" description="Deduction of PF" />
+      <field name="TDS" type="number" description="Deduction of TDS" />
+      <field name="PT" type="number" description="Deduction of PT" />
+      <field name="TOTAL DED" type="number" description="Total ded of employee" />
+      <field name="TOTAL GROSS" type="number" description="Total gross of employee" />
+    </collectioninfo>
+  </stage>
+  <stage stageid="def50c8e-0a9d-47b9-96f5-83ef4fc09211" name="Loop Start1" type="LoopStart">
+    <loginhibit onsuccess="true" />
+    <display x="15" y="0" />
+    <onsuccess>8750c6fe-74fe-4f0e-a69e-915c8f4b61eb</onsuccess>
+    <groupid>35877342-2a5b-4f4d-971f-f4672ee62378</groupid>
+    <looptype>ForEach</looptype>
+    <loopdata>Employee</loopdata>
+  </stage>
+  <stage stageid="205a2a16-6c97-4706-b959-aebb074b23cc" name="Loop End1" type="LoopEnd">
+    <loginhibit onsuccess="true" />
+    <display x="15" y="90" />
+    <onsuccess>5b897725-2fec-490f-ac6a-4420287df20e</onsuccess>
+    <groupid>35877342-2a5b-4f4d-971f-f4672ee62378</groupid>
+  </stage>
+  <stage stageid="8750c6fe-74fe-4f0e-a69e-915c8f4b61eb" name="Calculate payroll" type="MultipleCalculation">
+    <loginhibit onsuccess="true" />
+    <display x="15" y="45" />
+    <onsuccess>205a2a16-6c97-4706-b959-aebb074b23cc</onsuccess>
+    <steps>
+      <calculation expression="[Employee.SAL RATE BASIC]*0.1" stage="Employee.SAL RATE DA" />
+      <calculation expression="([Employee.SAL RATE BASIC]+[Employee.SAL RATE DA])*0.3" stage="Employee.SAL RATE HRA" />
+      <calculation expression="[Employee.SAL RATE BASIC]+[Employee.SAL RATE DA]+[Employee.SAL RATE HRA]&#xA;" stage="Employee.TOTAL SALARY" />
+      <calculation expression="[Employee.ATTEND P]+[Employee.ATTEND PL]+[Employee.ATTEND WO]" stage="Employee.ATTEND PD" />
+      <calculation expression="([Employee.SAL RATE BASIC]*[Employee.ATTEND PD])/31" stage="Employee.GROSS BASIC" />
+      <calculation expression="([Employee.SAL RATE DA]*[Employee.ATTEND PD])/31" stage="Employee.GROSS DA" />
+      <calculation expression="([Employee.SAL RATE HRA]*[Employee.ATTEND PD])/31" stage="Employee.GROSS HRA" />
+      <calculation expression="[Employee.GROSS BASIC]+[Employee.GROSS DA]+[Employee.GROSS HRA]+[Employee.INCENTIVE]" stage="Employee.TOTAL GROSS" />
+      <calculation expression="[Employee.TOTAL GROSS]*0.0075" stage="Employee.ESI AMOUNT" />
+      <calculation expression="([Employee.GROSS BASIC]+ [Employee.GROSS DA])*0.12" stage="Employee.PF AMOUNT" />
+      <calculation expression="[Employee.ESI AMOUNT]+[Employee.PF AMOUNT]+[Employee.TDS]+[Employee.PT]" stage="Employee.TOTAL DED" />
+      <calculation expression="[Employee.TOTAL GROSS]-[Employee.TOTAL DED]" stage="Employee.TOTAL GROSS" />
+    </steps>
+  </stage>
+  <stage stageid="5b897725-2fec-490f-ac6a-4420287df20e" name="Write Collection" type="Action">
+    <loginhibit onsuccess="true" />
+    <display x="15" y="135" />
+    <inputs>
+      <input type="number" name="handle" friendlyname="handle" narrative="The integer handle identifying the instance on which the specified collection should be written. The default of zero indicates the currently active instance." expr="[handle]" />
+      <input type="text" name="Workbook Name" friendlyname="Workbook Name" narrative="The name of the workbook within which the data should be written. The default empty value indicates the current workbook within the specified instance." expr="[Workbook Name]" />
+      <input type="collection" name="Collection" friendlyname="Collection" narrative="The collection containing the data which should be written to the worksheet." expr="[Employee]" />
+      <input type="text" name="Worksheet Name" friendlyname="Worksheet Name" narrative="The name of the worksheet on which the given data should be written. The default empty value indicates the current sheet within the specified workbook." expr="&quot;Sheet2&quot;" />
+      <input type="text" name="Cell Reference" friendlyname="Cell Reference" narrative="The reference at which the collection should be written." expr="&quot;A1&quot;" />
+      <input type="flag" name="Include Column Names" friendlyname="Include Column Names" narrative="True to indicate that the column names from the collection should be written out as the first row; False to ignore the column names and just write out the data." expr="True" />
+    </inputs>
+    <onsuccess>ec6659d7-a0a7-41bf-9199-f90a4c25e1a4</onsuccess>
+    <resource object="MS Excel VBO" action="Write Collection" />
+  </stage>
+  <stage stageid="ec6659d7-a0a7-41bf-9199-f90a4c25e1a4" name="Save Excel file" type="Action">
+    <loginhibit onsuccess="true" />
+    <display x="15" y="180" />
+    <inputs>
+      <input type="number" name="handle" friendlyname="handle" narrative="The integer handle identifying the instance on which the workbook which should be saved resides. The default of zero indicates the currently active instance." expr="[handle]" />
+      <input type="text" name="Workbook Name" friendlyname="Workbook Name" narrative="The name of the workbook which should be saved" expr="[Workbook Name]" />
+    </inputs>
+    <onsuccess>1d599f7e-c510-4a94-be27-c6f6dd01c2a4</onsuccess>
+    <resource object="MS Excel VBO" action="Save Workbook" />
+  </stage>
+  <stage stageid="1d599f7e-c510-4a94-be27-c6f6dd01c2a4" name="Close workbook" type="Action">
+    <loginhibit onsuccess="true" />
+    <display x="15" y="225" />
+    <inputs>
+      <input type="number" name="handle" friendlyname="handle" narrative="The integer handle identifying the instance on which the workbook which should be closed resides. The default of zero indicates the currently active instance." expr="[handle]" />
+    </inputs>
+    <onsuccess>97a20dd0-1901-493c-8b28-8b43b0e9e46a</onsuccess>
+    <resource object="MS Excel VBO" action="Close Current Workbook" />
+  </stage>
+</process>
